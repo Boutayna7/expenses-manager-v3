@@ -1,67 +1,66 @@
-import React, { useState } from 'react';
-import { Upload } from 'lucide-react';
+import React, { useState } from 'react'
 
-const ExpensesManager = () => {
-  const [userType, setUserType] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
+export default function Home() {
+  const [userType, setUserType] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     firstName: '',
     amount: '',
     reason: '',
     date: '',
-    justificatifImage: null,
-  });
-  const [expenses, setExpenses] = useState([]);
+    justificatifImage: null
+  })
+  const [expenses, setExpenses] = useState([])
 
-  const ADMIN_PASSWORD = '123456';
+  const ADMIN_PASSWORD = '123456'
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
+    const { name, value } = e.target
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setFormData((prev) => ({
+        setFormData(prev => ({
           ...prev,
-          justificatifImage: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
+          justificatifImage: reader.result
+        }))
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!formData.justificatifImage) {
-      alert('Veuillez ajouter une image justificative');
-      return;
+      alert('Veuillez ajouter une image justificative')
+      return
     }
     const expense = {
       id: Date.now(),
       ...formData,
       status: 'En attente',
       approved: false,
-      reimbursed: false,
-    };
-    setExpenses([expense, ...expenses]);
-    setFormData((prev) => ({
+      reimbursed: false
+    }
+    setExpenses([expense, ...expenses])
+    setFormData(prev => ({
       ...prev,
       amount: '',
       reason: '',
       date: '',
-      justificatifImage: null,
-    }));
-    const fileInput = document.querySelector('input[type="file"]');
-    if (fileInput) fileInput.value = '';
-  };
+      justificatifImage: null
+    }))
+    const fileInput = document.querySelector('input[type="file"]')
+    if (fileInput) fileInput.value = ''
+  }
 
   if (!userType) {
     return (
@@ -80,12 +79,12 @@ const ExpensesManager = () => {
               </button>
               <button
                 onClick={() => {
-                  const password = prompt('Entrez le mot de passe administrateur:');
+                  const password = prompt('Entrez le mot de passe administrateur:')
                   if (password === ADMIN_PASSWORD) {
-                    setIsAdmin(true);
-                    setUserType('admin');
+                    setIsAdmin(true)
+                    setUserType('admin')
                   } else {
-                    alert('Mot de passe incorrect');
+                    alert('Mot de passe incorrect')
                   }
                 }}
                 className="w-full py-8 rounded-2xl text-2xl font-medium text-gray-700 bg-gray-100 active:bg-gray-200"
@@ -104,7 +103,7 @@ const ExpensesManager = () => {
           />
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -115,8 +114,8 @@ const ExpensesManager = () => {
         </h1>
         <button
           onClick={() => {
-            setUserType('');
-            setIsAdmin(false);
+            setUserType('')
+            setIsAdmin(false)
           }}
           className="text-xl text-gray-600 bg-gray-100 px-6 py-4 rounded-xl active:bg-gray-200"
         >
@@ -200,15 +199,15 @@ const ExpensesManager = () => {
             />
             {formData.justificatifImage && (
               <div className="mt-4 border rounded-xl p-4">
-                <img
-                  src={formData.justificatifImage}
-                  alt="Aperçu"
+                <img 
+                  src={formData.justificatifImage} 
+                  alt="Aperçu" 
                   className="w-full rounded-xl"
                 />
               </div>
             )}
           </div>
-          <button
+          <button 
             type="submit"
             className="w-full bg-blue-600 text-white py-6 rounded-xl text-2xl font-medium active:bg-blue-700"
             style={{ height: '70px' }}
@@ -224,11 +223,12 @@ const ExpensesManager = () => {
         </h2>
         <div className="space-y-6">
           {expenses
-            .filter((expense) =>
-              userType === 'admin' || (expense.name === formData.name && expense.firstName === formData.firstName)
-            )
+            .filter(expense => userType === 'admin' || (
+              expense.name === formData.name && 
+              expense.firstName === formData.firstName
+            ))
             .slice(0, userType === 'admin' ? undefined : 5)
-            .map((expense) => (
+            .map(expense => (
               <div key={expense.id} className="border rounded-2xl p-6">
                 <div>
                   <p className="text-2xl font-medium">
@@ -239,23 +239,21 @@ const ExpensesManager = () => {
                   <p className="text-3xl font-bold mt-2">{expense.amount} DH</p>
                   {expense.justificatifImage && (
                     <div className="mt-4">
-                      <img
-                        src={expense.justificatifImage}
-                        alt="Justificatif"
+                      <img 
+                        src={expense.justificatifImage} 
+                        alt="Justificatif" 
                         className="w-full rounded-xl"
                       />
                     </div>
                   )}
                   <div className="mt-4">
-                    <span
-                      className={`inline-block px-6 py-3 rounded-xl text-xl font-medium ${
-                        expense.status === 'Remboursé'
-                          ? 'bg-green-100 text-green-800'
-                          : expense.status === 'Approuvé'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                    >
+                    <span className={`inline-block px-6 py-3 rounded-xl text-xl font-medium ${
+                      expense.status === 'Remboursé'
+                        ? 'bg-green-100 text-green-800'
+                        : expense.status === 'Approuvé'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
                       {expense.status}
                     </span>
                   </div>
@@ -263,17 +261,15 @@ const ExpensesManager = () => {
                     <div className="mt-6 space-y-4">
                       <button
                         onClick={() => {
-                          setExpenses(
-                            expenses.map((e) =>
-                              e.id === expense.id
-                                ? { ...e, approved: !e.approved, status: !e.approved ? 'Approuvé' : 'En attente' }
-                                : e
-                            )
-                          );
+                          setExpenses(expenses.map(e => 
+                            e.id === expense.id 
+                              ? {...e, approved: !e.approved, status: !e.approved ? 'Approuvé' : 'En attente'}
+                              : e
+                          ))
                         }}
                         className={`w-full py-4 rounded-xl text-xl font-medium ${
-                          expense.approved
-                            ? 'bg-green-100 text-green-800'
+                          expense.approved 
+                            ? 'bg-green-100 text-green-800' 
                             : 'border text-gray-700'
                         }`}
                         style={{ height: '60px' }}
@@ -283,13 +279,11 @@ const ExpensesManager = () => {
                       {expense.approved && !expense.reimbursed && (
                         <button
                           onClick={() => {
-                            setExpenses(
-                              expenses.map((e) =>
-                                e.id === expense.id
-                                  ? { ...e, reimbursed: true, status: 'Remboursé' }
-                                  : e
-                              )
-                            );
+                            setExpenses(expenses.map(e => 
+                              e.id === expense.id 
+                                ? {...e, reimbursed: true, status: 'Remboursé'}
+                                : e
+                            ))
                           }}
                           className="w-full py-4 rounded-xl text-xl font-medium border text-gray-700"
                           style={{ height: '60px' }}
@@ -313,7 +307,5 @@ const ExpensesManager = () => {
         />
       </div>
     </div>
-  );
-};
-
-export default ExpensesManager;
+  )
+}
