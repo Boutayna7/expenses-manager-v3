@@ -354,3 +354,4 @@ const ExpensesManager = () => {
   );
 };
 
+export default ExpensesManager;
