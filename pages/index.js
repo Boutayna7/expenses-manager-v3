@@ -64,16 +64,16 @@ export default function Home() {
 
   if (!userType) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-between p-4">
-        <div className="w-full max-w-sm mx-auto mt-8">
-          <h2 className="text-center text-2xl font-bold text-gray-900 mb-6">
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-between p-6">
+        <div className="w-full mx-auto mt-8">
+          <h2 className="text-center text-4xl font-bold text-gray-900 mb-10">
             Gestion des dépenses
           </h2>
-          <div className="bg-white p-4 shadow rounded-xl">
-            <div className="space-y-4">
+          <div className="bg-white p-6 shadow rounded-2xl">
+            <div className="space-y-6">
               <button
                 onClick={() => setUserType('driver')}
-                className="w-full py-4 rounded-xl text-lg font-medium text-white bg-blue-600 active:bg-blue-700"
+                className="w-full py-8 rounded-2xl text-2xl font-medium text-white bg-blue-600 active:bg-blue-700"
               >
                 Je suis chauffeur
               </button>
@@ -87,7 +87,7 @@ export default function Home() {
                     alert('Mot de passe incorrect')
                   }
                 }}
-                className="w-full py-4 rounded-xl text-lg font-medium text-gray-700 bg-gray-100 active:bg-gray-200"
+                className="w-full py-8 rounded-2xl text-2xl font-medium text-gray-700 bg-gray-100 active:bg-gray-200"
               >
                 Je suis administrateur
               </button>
@@ -95,9 +95,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-12 text-center">
           <img
-            className="mx-auto w-32"
+            className="mx-auto w-48"
             src="/logo.png"
             alt="Logo entreprise"
           />
@@ -107,9 +107,9 @@ export default function Home() {
   }
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold">
+    <div className="p-6 mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">
           {userType === 'driver' ? 'Espace Chauffeur' : 'Espace Administrateur'}
         </h1>
         <button
@@ -117,104 +117,111 @@ export default function Home() {
             setUserType('')
             setIsAdmin(false)
           }}
-          className="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg active:bg-gray-200"
+          className="text-xl text-gray-600 bg-gray-100 px-6 py-4 rounded-xl active:bg-gray-200"
         >
           Déconnexion
         </button>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-lg font-bold mb-4">Nouvelle dépense</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="bg-white p-6 rounded-2xl shadow mb-8">
+        <h2 className="text-2xl font-bold mb-6">Nouvelle dépense</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block mb-1 font-medium">Nom</label>
+            <label className="block mb-2 text-xl font-medium">Nom</label>
             <input
               type="text"
               name="name"
-              className="w-full p-3 border rounded-xl text-base"
+              className="w-full p-4 text-xl border rounded-xl"
               value={formData.name}
               onChange={handleChange}
               required
+              style={{ height: '60px' }}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Prénom</label>
+            <label className="block mb-2 text-xl font-medium">Prénom</label>
             <input
               type="text"
               name="firstName"
-              className="w-full p-3 border rounded-xl text-base"
+              className="w-full p-4 text-xl border rounded-xl"
               value={formData.firstName}
               onChange={handleChange}
               required
+              style={{ height: '60px' }}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Montant (DH)</label>
+            <label className="block mb-2 text-xl font-medium">Montant (DH)</label>
             <input
               type="number"
               name="amount"
-              className="w-full p-3 border rounded-xl text-base"
+              className="w-full p-4 text-xl border rounded-xl"
               value={formData.amount}
               onChange={handleChange}
               required
+              style={{ height: '60px' }}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Motif</label>
+            <label className="block mb-2 text-xl font-medium">Motif</label>
             <input
               type="text"
               name="reason"
-              className="w-full p-3 border rounded-xl text-base"
+              className="w-full p-4 text-xl border rounded-xl"
               value={formData.reason}
               onChange={handleChange}
               required
+              style={{ height: '60px' }}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Date</label>
+            <label className="block mb-2 text-xl font-medium">Date</label>
             <input
               type="date"
               name="date"
-              className="w-full p-3 border rounded-xl text-base"
+              className="w-full p-4 text-xl border rounded-xl"
               value={formData.date}
               onChange={handleChange}
               required
+              style={{ height: '60px' }}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Photo du justificatif</label>
+            <label className="block mb-2 text-xl font-medium">Photo du justificatif</label>
             <input
               type="file"
               accept="image/*"
               capture="environment"
               onChange={handleImageUpload}
-              className="w-full p-3 border rounded-xl text-base"
+              className="w-full p-4 text-xl border rounded-xl"
               required
+              style={{ height: '60px' }}
             />
             {formData.justificatifImage && (
-              <div className="mt-2 border rounded-xl p-2">
+              <div className="mt-4 border rounded-xl p-4">
                 <img 
                   src={formData.justificatifImage} 
                   alt="Aperçu" 
-                  className="w-full rounded-lg"
+                  className="w-full rounded-xl"
                 />
               </div>
             )}
           </div>
           <button 
             type="submit"
-            className="w-full bg-blue-600 text-white p-4 rounded-xl text-lg font-medium active:bg-blue-700"
+            className="w-full bg-blue-600 text-white py-6 rounded-xl text-2xl font-medium active:bg-blue-700"
+            style={{ height: '70px' }}
           >
             Enregistrer
           </button>
         </form>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow">
-        <h2 className="text-lg font-bold mb-4">
+      <div className="bg-white p-6 rounded-2xl shadow">
+        <h2 className="text-2xl font-bold mb-6">
           {userType === 'admin' ? 'Toutes les dépenses' : 'Vos dépenses'}
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {expenses
             .filter(expense => userType === 'admin' || (
               expense.name === formData.name && 
@@ -222,25 +229,25 @@ export default function Home() {
             ))
             .slice(0, userType === 'admin' ? undefined : 5)
             .map(expense => (
-              <div key={expense.id} className="border rounded-xl p-4">
+              <div key={expense.id} className="border rounded-2xl p-6">
                 <div>
-                  <p className="font-medium">
+                  <p className="text-2xl font-medium">
                     {expense.firstName} {expense.name}
                   </p>
-                  <p className="text-sm text-gray-600">{expense.date}</p>
-                  <p className="mt-1">{expense.reason}</p>
-                  <p className="text-lg font-bold mt-1">{expense.amount} DH</p>
+                  <p className="text-xl text-gray-600 mt-2">{expense.date}</p>
+                  <p className="text-xl mt-2">{expense.reason}</p>
+                  <p className="text-3xl font-bold mt-2">{expense.amount} DH</p>
                   {expense.justificatifImage && (
-                    <div className="mt-2">
+                    <div className="mt-4">
                       <img 
                         src={expense.justificatifImage} 
                         alt="Justificatif" 
-                        className="w-full rounded-lg"
+                        className="w-full rounded-xl"
                       />
                     </div>
                   )}
-                  <div className="mt-3">
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm ${
+                  <div className="mt-4">
+                    <span className={`inline-block px-6 py-3 rounded-xl text-xl font-medium ${
                       expense.status === 'Remboursé'
                         ? 'bg-green-100 text-green-800'
                         : expense.status === 'Approuvé'
@@ -251,7 +258,7 @@ export default function Home() {
                     </span>
                   </div>
                   {isAdmin && (
-                    <div className="mt-3 space-y-2">
+                    <div className="mt-6 space-y-4">
                       <button
                         onClick={() => {
                           setExpenses(expenses.map(e => 
@@ -260,11 +267,12 @@ export default function Home() {
                               : e
                           ))
                         }}
-                        className={`w-full py-2 rounded-lg text-center ${
+                        className={`w-full py-4 rounded-xl text-xl font-medium ${
                           expense.approved 
                             ? 'bg-green-100 text-green-800' 
                             : 'border text-gray-700'
                         }`}
+                        style={{ height: '60px' }}
                       >
                         {expense.approved ? 'Approuvé' : 'Approuver'}
                       </button>
@@ -277,7 +285,8 @@ export default function Home() {
                                 : e
                             ))
                           }}
-                          className="w-full py-2 rounded-lg border text-gray-700"
+                          className="w-full py-4 rounded-xl text-xl font-medium border text-gray-700"
+                          style={{ height: '60px' }}
                         >
                           Marquer remboursé
                         </button>
@@ -290,9 +299,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mt-8 mb-4 text-center">
+      <div className="mt-12 mb-6 text-center">
         <img
-          className="mx-auto h-12 w-auto"
+          className="mx-auto h-24 w-auto"
           src="/logo.png"
           alt="Logo entreprise"
         />
