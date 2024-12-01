@@ -65,37 +65,40 @@ const ExpensesManager = () => {
 
   if (!userType) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-        <div className="bg-white p-6 rounded-2xl shadow w-full max-w-md">
-          <h2 className="text-4xl font-bold text-center mb-10">
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-between p-6">
+        <div className="w-full mx-auto mt-8">
+          <h2 className="text-center text-4xl font-bold text-gray-900 mb-10">
             Gestion des dépenses
           </h2>
-          <div className="space-y-6">
-            <button
-              onClick={() => setUserType('driver')}
-              className="w-full py-8 rounded-2xl text-2xl font-medium text-white bg-blue-600 active:bg-blue-700"
-            >
-              Je suis chauffeur
-            </button>
-            <button
-              onClick={() => {
-                const password = prompt('Entrez le mot de passe administrateur:');
-                if (password === ADMIN_PASSWORD) {
-                  setIsAdmin(true);
-                  setUserType('admin');
-                } else {
-                  alert('Mot de passe incorrect');
-                }
-              }}
-              className="w-full py-8 rounded-2xl text-2xl font-medium text-gray-700 bg-gray-100 active:bg-gray-200"
-            >
-              Je suis administrateur
-            </button>
+          <div className="bg-white p-6 shadow rounded-2xl">
+            <div className="space-y-6">
+              <button
+                onClick={() => setUserType('driver')}
+                className="w-full py-8 rounded-2xl text-2xl font-medium text-white bg-blue-600 active:bg-blue-700"
+              >
+                Je suis chauffeur
+              </button>
+              <button
+                onClick={() => {
+                  const password = prompt('Entrez le mot de passe administrateur:');
+                  if (password === ADMIN_PASSWORD) {
+                    setIsAdmin(true);
+                    setUserType('admin');
+                  } else {
+                    alert('Mot de passe incorrect');
+                  }
+                }}
+                className="w-full py-8 rounded-2xl text-2xl font-medium text-gray-700 bg-gray-100 active:bg-gray-200"
+              >
+                Je suis administrateur
+              </button>
+            </div>
           </div>
         </div>
-        <div className="mt-12">
+
+        <div className="mt-12 text-center">
           <img
-            className="mx-auto h-24 w-auto"
+            className="mx-auto w-48"
             src="/logo.png"
             alt="Logo entreprise"
           />
@@ -105,7 +108,7 @@ const ExpensesManager = () => {
   }
 
   return (
-    <div className="p-6 mx-auto max-w-5xl">
+    <div className="p-6 mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">
           {userType === 'driver' ? 'Espace Chauffeur' : 'Espace Administrateur'}
@@ -186,32 +189,24 @@ const ExpensesManager = () => {
           </div>
           <div>
             <label className="block mb-2 text-xl font-medium">Photo du justificatif</label>
-            <div className="flex items-center space-x-4">
-              <label
-                htmlFor="justificatifImage"
-                className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 cursor-pointer"
-              >
-                <Upload size={24} />
-                <span>Ajouter une image</span>
-              </label>
-              <input
-                type="file"
-                id="justificatifImage"
-                accept="image/*"
-                capture="environment"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-              {formData.justificatifImage && (
-                <div className="border rounded-xl p-4">
-                  <img
-                    src={formData.justificatifImage}
-                    alt="Aperçu"
-                    className="w-full rounded-xl"
-                  />
-                </div>
-              )}
-            </div>
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleImageUpload}
+              className="w-full p-4 text-xl border rounded-xl"
+              required
+              style={{ height: '60px' }}
+            />
+            {formData.justificatifImage && (
+              <div className="mt-4 border rounded-xl p-4">
+                <img
+                  src={formData.justificatifImage}
+                  alt="Aperçu"
+                  className="w-full rounded-xl"
+                />
+              </div>
+            )}
           </div>
           <button
             type="submit"
