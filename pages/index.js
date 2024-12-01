@@ -2,32 +2,30 @@ import { useState } from 'react'
 
 export default function Home() {
   const [userType, setUserType] = useState('')
+  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [amount, setAmount] = useState('')
+  const [reason, setReason] = useState('')
+  const [date, setDate] = useState('')
   const [expenses, setExpenses] = useState([])
-  const [currentDriver, setCurrentDriver] = useState({
-    name: '',
-    firstName: ''
-  })
-  const [expenseForm, setExpenseForm] = useState({
-    amount: '',
-    reason: '',
-    date: ''
-  })
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const expense = {
-      driverName: currentDriver.name,
-      driverFirstName: currentDriver.firstName,
-      amount: expenseForm.amount,
-      reason: expenseForm.reason,
-      date: expenseForm.date,
       id: Date.now(),
+      name,
+      firstName,
+      amount,
+      reason,
+      date,
       status: 'En attente',
       approved: false,
-      reimbursed: false,
+      reimbursed: false
     }
     setExpenses([expense, ...expenses])
-    setExpenseForm({ amount: '', reason: '', date: '' })
+    setAmount('')
+    setReason('')
+    setDate('')
   }
 
   if (!userType) {
@@ -66,146 +64,7 @@ export default function Home() {
     )
   }
 
-  const ExpenseForm = () => (
-    <div className="bg-white p-8 rounded-lg shadow mb-8">
-      <h2 className="text-2xl font-bold mb-6">Nouvelle dépense</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block mb-2 text-lg">Nom</label>
-            <input
-              type="text"
-              className="w-full p-3 border rounded-lg text-lg"
-              value={currentDriver.name}
-              onChange={(e) => setCurrentDriver({...currentDriver, name: e.target.value})}
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 text-lg">Prénom</label>
-            <input
-              type="text"
-              className="w-full p-3 border rounded-lg text-lg"
-              value={currentDriver.firstName}
-              onChange={(e) => setCurrentDriver({...currentDriver, firstName: e.target.value})}
-              required
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block mb-2 text-lg">Montant (DH)</label>
-          <input
-            type="number"
-            className="w-full p-3 border rounded-lg text-lg"
-            value={expenseForm.amount}
-            onChange={(e) => setExpenseForm({...expenseForm, amount: e.target.value})}
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2 text-lg">Motif</label>
-          <input
-            type="text"
-            className="w-full p-3 border rounded-lg text-lg"
-            value={expenseForm.reason}
-            onChange={(e) => setExpenseForm({...expenseForm, reason: e.target.value})}
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2 text-lg">Date</label>
-          <input
-            type="date"
-            className="w-full p-3 border rounded-lg text-lg"
-            value={expenseForm.date}
-            onChange={(e) => setExpenseForm({...expenseForm, date: e.target.value})}
-            required
-          />
-        </div>
-        <button 
-          type="submit"
-          className="w-full bg-blue-500 text-white p-4 rounded-lg text-lg font-medium hover:bg-blue-600"
-        >
-          Enregistrer la dépense
-        </button>
-      </form>
-    </div>
-  )
-
-  const ExpensesList = ({ showAll = false }) => (
-    <div className="bg-white p-8 rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-6">
-        {showAll ? 'Toutes les dépenses' : 'Vos dernières dépenses'}
-      </h2>
-      <div className="space-y-6">
-        {expenses
-          .filter(expense => showAll || (
-            expense.driverName === currentDriver.name && 
-            expense.driverFirstName === currentDriver.firstName
-          ))
-          .slice(0, showAll ? undefined : 5)
-          .map(expense => (
-            <div key={expense.id} className="border p-6 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-bold text-lg mb-1">
-                    {expense.driverFirstName} {expense.driverName}
-                  </p>
-                  <p className="text-gray-600 mb-2">{expense.date}</p>
-                  <p className="text-lg mb-2">{expense.reason}</p>
-                  <p className="font-bold text-xl">{expense.amount} DH</p>
-                </div>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => {
-                      setExpenses(expenses.map(e => 
-                        e.id === expense.id 
-                          ? {...e, approved: !e.approved, status: !e.approved ? 'Approuvé' : 'En attente'}
-                          : e
-                      ))
-                    }}
-                    className={`block w-full px-6 py-3 rounded-lg text-lg ${
-                      expense.approved 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'border border-gray-300'
-                    }`}
-                  >
-                    {expense.approved ? 'Approuvé' : 'Approuver'}
-                  </button>
-                  {expense.approved && !expense.reimbursed && (
-                    <button
-                      onClick={() => {
-                        setExpenses(expenses.map(e => 
-                          e.id === expense.id 
-                            ? {...e, reimbursed: true, status: 'Remboursé'}
-                            : e
-                        ))
-                      }}
-                      className="block w-full px-6 py-3 rounded-lg border border-gray-300 text-lg"
-                    >
-                      Marquer remboursé
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="mt-4">
-                <span className={`px-4 py-2 text-lg rounded-full ${
-                  expense.status === 'Remboursé'
-                    ? 'bg-green-100 text-green-800'
-                    : expense.status === 'Approuvé'
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-yellow-100 text-yellow-800'
-                }`}>
-                  {expense.status}
-                </span>
-              </div>
-            </div>
-          ))}
-      </div>
-    </div>
-  )
-
-  const pageContent = (
+  return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">
@@ -219,8 +78,137 @@ export default function Home() {
         </button>
       </div>
 
-      <ExpenseForm />
-      <ExpensesList showAll={userType === 'admin'} />
+      <div className="bg-white p-8 rounded-lg shadow mb-8">
+        <h2 className="text-2xl font-bold mb-6">Nouvelle dépense</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block mb-2 text-lg">Nom</label>
+              <input
+                type="text"
+                className="w-full p-3 border rounded-lg text-lg"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-lg">Prénom</label>
+              <input
+                type="text"
+                className="w-full p-3 border rounded-lg text-lg"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block mb-2 text-lg">Montant (DH)</label>
+            <input
+              type="number"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-lg">Motif</label>
+            <input
+              type="text"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-lg">Date</label>
+            <input
+              type="date"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </div>
+          <button 
+            type="submit"
+            className="w-full bg-blue-500 text-white p-4 rounded-lg text-lg font-medium hover:bg-blue-600"
+          >
+            Enregistrer la dépense
+          </button>
+        </form>
+      </div>
+
+      <div className="bg-white p-8 rounded-lg shadow">
+        <h2 className="text-2xl font-bold mb-6">
+          {userType === 'admin' ? 'Toutes les dépenses' : 'Vos dernières dépenses'}
+        </h2>
+        <div className="space-y-6">
+          {expenses
+            .filter(expense => userType === 'admin' || (expense.name === name && expense.firstName === firstName))
+            .slice(0, userType === 'admin' ? undefined : 5)
+            .map(expense => (
+              <div key={expense.id} className="border p-6 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="font-bold text-lg mb-1">
+                      {expense.firstName} {expense.name}
+                    </p>
+                    <p className="text-gray-600 mb-2">{expense.date}</p>
+                    <p className="text-lg mb-2">{expense.reason}</p>
+                    <p className="font-bold text-xl">{expense.amount} DH</p>
+                  </div>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => {
+                        setExpenses(expenses.map(e => 
+                          e.id === expense.id 
+                            ? {...e, approved: !e.approved, status: !e.approved ? 'Approuvé' : 'En attente'}
+                            : e
+                        ))
+                      }}
+                      className={`block w-full px-6 py-3 rounded-lg text-lg ${
+                        expense.approved 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'border border-gray-300'
+                      }`}
+                    >
+                      {expense.approved ? 'Approuvé' : 'Approuver'}
+                    </button>
+                    {expense.approved && !expense.reimbursed && (
+                      <button
+                        onClick={() => {
+                          setExpenses(expenses.map(e => 
+                            e.id === expense.id 
+                              ? {...e, reimbursed: true, status: 'Remboursé'}
+                              : e
+                          ))
+                        }}
+                        className="block w-full px-6 py-3 rounded-lg border border-gray-300 text-lg"
+                      >
+                        Marquer remboursé
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <span className={`px-4 py-2 text-lg rounded-full ${
+                    expense.status === 'Remboursé'
+                      ? 'bg-green-100 text-green-800'
+                      : expense.status === 'Approuvé'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {expense.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
 
       <div className="mt-12 text-center">
         <img
@@ -231,6 +219,4 @@ export default function Home() {
       </div>
     </div>
   )
-
-  return pageContent
 }
