@@ -73,7 +73,7 @@ export default function Home() {
             <div className="space-y-6">
               <button
                 onClick={() => setUserType('driver')}
-                className="w-full py-8 rounded-2xl text-2xl font-medium text-white bg-blue-600 active:bg-blue-700"
+                className="w-full py-6 rounded-2xl text-2xl font-medium text-white bg-blue-600 active:bg-blue-700"
               >
                 Je suis chauffeur
               </button>
