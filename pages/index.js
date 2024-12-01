@@ -1,35 +1,52 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 export default function Home() {
+  // States de base
   const [userType, setUserType] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
-  const [name, setName] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [amount, setAmount] = useState('')
-  const [reason, setReason] = useState('')
-  const [date, setDate] = useState('')
+  const [formData, setFormData] = useState({
+    name: '',
+    firstName: '',
+    amount: '',
+    reason: '',
+    date: '',
+    justificatifNumero: '',
+    justificatif: ''
+  })
   const [expenses, setExpenses] = useState([])
 
-  // Changez ce mot de passe pour votre accès administrateur
+  // Mot de passe admin - À changer
   const ADMIN_PASSWORD = '123456'
 
+  // Gestion des changements de formulaire
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault()
     const expense = {
       id: Date.now(),
-      name,
-      firstName,
-      amount,
-      reason,
-      date,
+      ...formData,
       status: 'En attente',
       approved: false,
       reimbursed: false
     }
     setExpenses([expense, ...expenses])
-    setAmount('')
-    setReason('')
-    setDate('')
+    // Reset seulement les champs de dépense, pas le nom et prénom
+    setFormData(prev => ({
+      ...prev,
+      amount: '',
+      reason: '',
+      date: '',
+      justificatifNumero: '',
+      justificatif: ''
+    }))
   }
 
   // Page de connexion
@@ -103,9 +120,10 @@ export default function Home() {
               <label className="block mb-2 text-lg">Nom</label>
               <input
                 type="text"
+                name="name"
                 className="w-full p-3 border rounded-lg text-lg"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -113,9 +131,10 @@ export default function Home() {
               <label className="block mb-2 text-lg">Prénom</label>
               <input
                 type="text"
+                name="firstName"
                 className="w-full p-3 border rounded-lg text-lg"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={formData.firstName}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -124,9 +143,10 @@ export default function Home() {
             <label className="block mb-2 text-lg">Montant (DH)</label>
             <input
               type="number"
+              name="amount"
               className="w-full p-3 border rounded-lg text-lg"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              value={formData.amount}
+              onChange={handleChange}
               required
             />
           </div>
@@ -134,9 +154,10 @@ export default function Home() {
             <label className="block mb-2 text-lg">Motif</label>
             <input
               type="text"
+              name="reason"
               className="w-full p-3 border rounded-lg text-lg"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              value={formData.reason}
+              onChange={handleChange}
               required
             />
           </div>
@@ -144,10 +165,35 @@ export default function Home() {
             <label className="block mb-2 text-lg">Date</label>
             <input
               type="date"
+              name="date"
               className="w-full p-3 border rounded-lg text-lg"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              value={formData.date}
+              onChange={handleChange}
               required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-lg">Numéro de la pièce justificative</label>
+            <input
+              type="text"
+              name="justificatifNumero"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={formData.justificatifNumero}
+              onChange={handleChange}
+              required
+              placeholder="ex: Facture-123 ou Ticket-456"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-lg">Description de la pièce justificative</label>
+            <textarea
+              name="justificatif"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={formData.justificatif}
+              onChange={handleChange}
+              required
+              placeholder="Description de la pièce justificative (type de document, détails, etc.)"
+              rows="3"
             />
           </div>
           <button 
@@ -165,21 +211,39 @@ export default function Home() {
         </h2>
         <div className="space-y-6">
           {expenses
-            .filter(expense => userType === 'admin' || (expense.name === name && expense.firstName === firstName))
+            .filter(expense => userType === 'admin' || (
+              expense.name === formData.name && 
+              expense.firstName === formData.firstName
+            ))
             .slice(0, userType === 'admin' ? undefined : 5)
             .map(expense => (
               <div key={expense.id} className="border p-6 rounded-lg">
                 <div className="flex justify-between items-center">
-                  <div>
+                  <div className="flex-grow">
                     <p className="font-bold text-lg mb-1">
                       {expense.firstName} {expense.name}
                     </p>
                     <p className="text-gray-600 mb-2">{expense.date}</p>
                     <p className="text-lg mb-2">{expense.reason}</p>
-                    <p className="font-bold text-xl">{expense.amount} DH</p>
+                    <p className="font-bold text-xl mb-3">{expense.amount} DH</p>
+                    <div className="bg-gray-50 p-3 rounded-lg mb-3">
+                      <p className="text-gray-700"><strong>N° Justificatif:</strong> {expense.justificatifNumero}</p>
+                      <p className="text-gray-700"><strong>Description:</strong> {expense.justificatif}</p>
+                    </div>
+                    <div className="mt-4">
+                      <span className={`px-4 py-2 text-lg rounded-full ${
+                        expense.status === 'Remboursé'
+                          ? 'bg-green-100 text-green-800'
+                          : expense.status === 'Approuvé'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {expense.status}
+                      </span>
+                    </div>
                   </div>
                   {isAdmin && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 ml-4">
                       <button
                         onClick={() => {
                           setExpenses(expenses.map(e => 
@@ -212,17 +276,6 @@ export default function Home() {
                       )}
                     </div>
                   )}
-                </div>
-                <div className="mt-4">
-                  <span className={`px-4 py-2 text-lg rounded-full ${
-                    expense.status === 'Remboursé'
-                      ? 'bg-green-100 text-green-800'
-                      : expense.status === 'Approuvé'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {expense.status}
-                  </span>
                 </div>
               </div>
             ))}
