@@ -29,7 +29,7 @@ export default function Home() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img
             className="mx-auto h-24 w-auto"
-            src=src="/logo.png"
+            src=src="public/logo.png"
             alt="Logo entreprise"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -65,7 +65,7 @@ export default function Home() {
         <div className="flex justify-between items-center mb-8">
           <img
             className="h-12 w-auto"
-            src=src="/logo.png"
+            src=src="public/logo.png"
             alt="Logo entreprise"
           />
           <button
@@ -163,7 +163,7 @@ export default function Home() {
       <div className="flex justify-between items-center mb-8">
         <img
           className="h-12 w-auto"
-          src=src="/logo.png"
+          src=src="public/logo.png"
           alt="Logo entreprise"
         />
         <button
