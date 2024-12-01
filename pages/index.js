@@ -2,12 +2,16 @@ import { useState } from 'react'
 
 export default function Home() {
   const [userType, setUserType] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
   const [name, setName] = useState('')
   const [firstName, setFirstName] = useState('')
   const [amount, setAmount] = useState('')
   const [reason, setReason] = useState('')
   const [date, setDate] = useState('')
   const [expenses, setExpenses] = useState([])
+
+  // Changez ce mot de passe pour votre accès administrateur
+  const ADMIN_PASSWORD = '123456'
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -28,6 +32,7 @@ export default function Home() {
     setDate('')
   }
 
+  // Page de connexion
   if (!userType) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col justify-between py-12 sm:px-6 lg:px-8">
@@ -44,7 +49,15 @@ export default function Home() {
                 Je suis chauffeur
               </button>
               <button
-                onClick={() => setUserType('admin')}
+                onClick={() => {
+                  const password = prompt('Entrez le mot de passe administrateur:')
+                  if (password === ADMIN_PASSWORD) {
+                    setIsAdmin(true)
+                    setUserType('admin')
+                  } else {
+                    alert('Mot de passe incorrect')
+                  }
+                }}
                 className="w-full flex justify-center py-6 px-8 border border-gray-300 rounded-lg shadow-sm text-xl font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 Je suis administrateur
@@ -64,6 +77,7 @@ export default function Home() {
     )
   }
 
+  // Page principale
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
@@ -71,7 +85,10 @@ export default function Home() {
           {userType === 'driver' ? 'Espace Chauffeur' : 'Espace Administrateur'}
         </h1>
         <button
-          onClick={() => setUserType('')}
+          onClick={() => {
+            setUserType('')
+            setIsAdmin(false)
+          }}
           className="text-gray-600 hover:text-gray-800 text-lg"
         >
           Déconnexion
@@ -161,38 +178,40 @@ export default function Home() {
                     <p className="text-lg mb-2">{expense.reason}</p>
                     <p className="font-bold text-xl">{expense.amount} DH</p>
                   </div>
-                  <div className="space-y-3">
-                    <button
-                      onClick={() => {
-                        setExpenses(expenses.map(e => 
-                          e.id === expense.id 
-                            ? {...e, approved: !e.approved, status: !e.approved ? 'Approuvé' : 'En attente'}
-                            : e
-                        ))
-                      }}
-                      className={`block w-full px-6 py-3 rounded-lg text-lg ${
-                        expense.approved 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'border border-gray-300'
-                      }`}
-                    >
-                      {expense.approved ? 'Approuvé' : 'Approuver'}
-                    </button>
-                    {expense.approved && !expense.reimbursed && (
+                  {isAdmin && (
+                    <div className="space-y-3">
                       <button
                         onClick={() => {
                           setExpenses(expenses.map(e => 
                             e.id === expense.id 
-                              ? {...e, reimbursed: true, status: 'Remboursé'}
+                              ? {...e, approved: !e.approved, status: !e.approved ? 'Approuvé' : 'En attente'}
                               : e
                           ))
                         }}
-                        className="block w-full px-6 py-3 rounded-lg border border-gray-300 text-lg"
+                        className={`block w-full px-6 py-3 rounded-lg text-lg ${
+                          expense.approved 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'border border-gray-300'
+                        }`}
                       >
-                        Marquer remboursé
+                        {expense.approved ? 'Approuvé' : 'Approuver'}
                       </button>
-                    )}
-                  </div>
+                      {expense.approved && !expense.reimbursed && (
+                        <button
+                          onClick={() => {
+                            setExpenses(expenses.map(e => 
+                              e.id === expense.id 
+                                ? {...e, reimbursed: true, status: 'Remboursé'}
+                                : e
+                            ))
+                          }}
+                          className="block w-full px-6 py-3 rounded-lg border border-gray-300 text-lg"
+                        >
+                          Marquer remboursé
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4">
                   <span className={`px-4 py-2 text-lg rounded-full ${
