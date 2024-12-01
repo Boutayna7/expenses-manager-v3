@@ -3,31 +3,36 @@ import { useState } from 'react'
 export default function Home() {
   const [userType, setUserType] = useState('')
   const [expenses, setExpenses] = useState([])
-  const [newExpense, setNewExpense] = useState({
-    driverName: '',
-    driverFirstName: '',
+  const [currentDriver, setCurrentDriver] = useState({
+    name: '',
+    firstName: ''
+  })
+  const [expenseForm, setExpenseForm] = useState({
     amount: '',
     reason: '',
-    date: '',
+    date: ''
   })
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const expense = {
-      ...newExpense,
+      driverName: currentDriver.name,
+      driverFirstName: currentDriver.firstName,
+      amount: expenseForm.amount,
+      reason: expenseForm.reason,
+      date: expenseForm.date,
       id: Date.now(),
       status: 'En attente',
       approved: false,
       reimbursed: false,
     }
     setExpenses([expense, ...expenses])
-    setNewExpense({ driverName: '', driverFirstName: '', amount: '', reason: '', date: '' })
+    setExpenseForm({ amount: '', reason: '', date: '' })
   }
 
   if (!userType) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col justify-between py-12 sm:px-6 lg:px-8">
-        {/* Section des boutons en haut */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
           <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
             Gestion des dépenses
@@ -50,7 +55,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Logo en bas */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md mt-12">
           <img
             className="mx-auto w-auto max-h-48 max-w-[80%]"
@@ -72,8 +76,8 @@ export default function Home() {
             <input
               type="text"
               className="w-full p-3 border rounded-lg text-lg"
-              value={newExpense.driverName}
-              onChange={(e) => setNewExpense({...newExpense, driverName: e.target.value})}
+              value={currentDriver.name}
+              onChange={(e) => setCurrentDriver({...currentDriver, name: e.target.value})}
               required
             />
           </div>
@@ -82,8 +86,8 @@ export default function Home() {
             <input
               type="text"
               className="w-full p-3 border rounded-lg text-lg"
-              value={newExpense.driverFirstName}
-              onChange={(e) => setNewExpense({...newExpense, driverFirstName: e.target.value})}
+              value={currentDriver.firstName}
+              onChange={(e) => setCurrentDriver({...currentDriver, firstName: e.target.value})}
               required
             />
           </div>
@@ -93,8 +97,8 @@ export default function Home() {
           <input
             type="number"
             className="w-full p-3 border rounded-lg text-lg"
-            value={newExpense.amount}
-            onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
+            value={expenseForm.amount}
+            onChange={(e) => setExpenseForm({...expenseForm, amount: e.target.value})}
             required
           />
         </div>
@@ -103,8 +107,8 @@ export default function Home() {
           <input
             type="text"
             className="w-full p-3 border rounded-lg text-lg"
-            value={newExpense.reason}
-            onChange={(e) => setNewExpense({...newExpense, reason: e.target.value})}
+            value={expenseForm.reason}
+            onChange={(e) => setExpenseForm({...expenseForm, reason: e.target.value})}
             required
           />
         </div>
@@ -113,8 +117,8 @@ export default function Home() {
           <input
             type="date"
             className="w-full p-3 border rounded-lg text-lg"
-            value={newExpense.date}
-            onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
+            value={expenseForm.date}
+            onChange={(e) => setExpenseForm({...expenseForm, date: e.target.value})}
             required
           />
         </div>
@@ -136,8 +140,8 @@ export default function Home() {
       <div className="space-y-6">
         {expenses
           .filter(expense => showAll || (
-            expense.driverName === newExpense.driverName && 
-            expense.driverFirstName === newExpense.driverFirstName
+            expense.driverName === currentDriver.name && 
+            expense.driverFirstName === currentDriver.firstName
           ))
           .slice(0, showAll ? undefined : 5)
           .map(expense => (
