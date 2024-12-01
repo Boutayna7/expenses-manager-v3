@@ -4,7 +4,8 @@ export default function Home() {
   const [userType, setUserType] = useState('')
   const [expenses, setExpenses] = useState([])
   const [newExpense, setNewExpense] = useState({
-    driverId: '',
+    driverName: '',
+    driverFirstName: '',
     amount: '',
     reason: '',
     date: '',
@@ -20,173 +21,137 @@ export default function Home() {
       reimbursed: false,
     }
     setExpenses([expense, ...expenses])
-    setNewExpense({ driverId: '', amount: '', reason: '', date: '' })
+    setNewExpense({ driverName: '', driverFirstName: '', amount: '', reason: '', date: '' })
   }
 
   if (!userType) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img
-            className="mx-auto h-32 w-auto max-w-[300px]"
-            src="/logo.png"
-            alt="Logo entreprise"
-          />
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-between py-12 sm:px-6 lg:px-8">
+        {/* Section des boutons en haut */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
+          <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
             Gestion des dépenses
           </h2>
-        </div>
-
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <div className="space-y-4">
+            <div className="space-y-6">
               <button
                 onClick={() => setUserType('driver')}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                className="w-full flex justify-center py-6 px-8 border border-transparent rounded-lg shadow-sm text-xl font-medium text-white bg-blue-600 hover:bg-blue-700"
               >
                 Je suis chauffeur
               </button>
               <button
                 onClick={() => setUserType('admin')}
-                className="w-full flex justify-center py-4 px-6 border border-gray-300 rounded-1g shadow-sm text-lg font-medium text-gray-600 bg-white hover:bg-gray-700"
+                className="w-full flex justify-center py-6 px-8 border border-gray-300 rounded-lg shadow-sm text-xl font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 Je suis administrateur
               </button>
             </div>
           </div>
         </div>
-      </div>
-    )
-  }
 
-  if (userType === 'driver') {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-8">
+        {/* Logo en bas */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-md mt-12">
           <img
-            className="h-12 w-auto"
+            className="mx-auto w-auto max-h-48 max-w-[80%]"
             src="/logo.png"
             alt="Logo entreprise"
           />
-          <button
-            onClick={() => setUserType('')}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            Déconnexion
-          </button>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
-          <h2 className="text-xl font-bold mb-4">Nouvelle dépense</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1">ID Chauffeur</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded"
-                  value={newExpense.driverId}
-                  onChange={(e) => setNewExpense({...newExpense, driverId: e.target.value})}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1">Montant (DH)</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded"
-                  value={newExpense.amount}
-                  onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block mb-1">Motif</label>
-              <input
-                type="text"
-                className="w-full p-2 border rounded"
-                value={newExpense.reason}
-                onChange={(e) => setNewExpense({...newExpense, reason: e.target.value})}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Date</label>
-              <input
-                type="date"
-                className="w-full p-2 border rounded"
-                value={newExpense.date}
-                onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
-                required
-              />
-            </div>
-            <button 
-              type="submit"
-              className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-            >
-              Enregistrer la dépense
-            </button>
-          </form>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-bold mb-4">Vos dernières dépenses</h2>
-          <div className="space-y-4">
-            {expenses
-              .filter(expense => expense.driverId === newExpense.driverId)
-              .slice(0, 5)
-              .map(expense => (
-                <div key={expense.id} className="border p-4 rounded">
-                  <p className="font-bold">{expense.amount} DH</p>
-                  <p>{expense.reason}</p>
-                  <p className="text-sm text-gray-600">{expense.date}</p>
-                  <span className={`mt-2 inline-block px-2 py-1 text-sm rounded-full ${
-                    expense.status === 'Remboursé'
-                      ? 'bg-green-100 text-green-800'
-                      : expense.status === 'Approuvé'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {expense.status}
-                  </span>
-                </div>
-              ))}
-          </div>
         </div>
       </div>
     )
   }
 
-  return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="flex justify-between items-center mb-8">
-        <img
-          className="h-12 w-auto"
-          src="/logo.png"
-          alt="Logo entreprise"
-        />
-        <button
-          onClick={() => setUserType('')}
-          className="text-gray-600 hover:text-gray-800"
+  const ExpenseForm = () => (
+    <div className="bg-white p-8 rounded-lg shadow mb-8">
+      <h2 className="text-2xl font-bold mb-6">Nouvelle dépense</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className="block mb-2 text-lg">Nom</label>
+            <input
+              type="text"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={newExpense.driverName}
+              onChange={(e) => setNewExpense({...newExpense, driverName: e.target.value})}
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-lg">Prénom</label>
+            <input
+              type="text"
+              className="w-full p-3 border rounded-lg text-lg"
+              value={newExpense.driverFirstName}
+              onChange={(e) => setNewExpense({...newExpense, driverFirstName: e.target.value})}
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block mb-2 text-lg">Montant (DH)</label>
+          <input
+            type="number"
+            className="w-full p-3 border rounded-lg text-lg"
+            value={newExpense.amount}
+            onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-2 text-lg">Motif</label>
+          <input
+            type="text"
+            className="w-full p-3 border rounded-lg text-lg"
+            value={newExpense.reason}
+            onChange={(e) => setNewExpense({...newExpense, reason: e.target.value})}
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-2 text-lg">Date</label>
+          <input
+            type="date"
+            className="w-full p-3 border rounded-lg text-lg"
+            value={newExpense.date}
+            onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
+            required
+          />
+        </div>
+        <button 
+          type="submit"
+          className="w-full bg-blue-500 text-white p-4 rounded-lg text-lg font-medium hover:bg-blue-600"
         >
-          Déconnexion
+          Enregistrer la dépense
         </button>
-      </div>
+      </form>
+    </div>
+  )
 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">Toutes les dépenses</h2>
-        <div className="space-y-4">
-          {expenses.map(expense => (
-            <div key={expense.id} className="border p-4 rounded">
+  const ExpensesList = ({ showAll = false }) => (
+    <div className="bg-white p-8 rounded-lg shadow">
+      <h2 className="text-2xl font-bold mb-6">
+        {showAll ? 'Toutes les dépenses' : 'Vos dernières dépenses'}
+      </h2>
+      <div className="space-y-6">
+        {expenses
+          .filter(expense => showAll || (
+            expense.driverName === newExpense.driverName && 
+            expense.driverFirstName === newExpense.driverFirstName
+          ))
+          .slice(0, showAll ? undefined : 5)
+          .map(expense => (
+            <div key={expense.id} className="border p-6 rounded-lg">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-bold">Chauffeur #{expense.driverId}</p>
-                  <p className="text-sm text-gray-600">{expense.date}</p>
-                  <p>{expense.reason}</p>
-                  <p className="font-bold">{expense.amount} DH</p>
+                  <p className="font-bold text-lg mb-1">
+                    {expense.driverFirstName} {expense.driverName}
+                  </p>
+                  <p className="text-gray-600 mb-2">{expense.date}</p>
+                  <p className="text-lg mb-2">{expense.reason}</p>
+                  <p className="font-bold text-xl">{expense.amount} DH</p>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <button
                     onClick={() => {
                       setExpenses(expenses.map(e => 
@@ -195,7 +160,7 @@ export default function Home() {
                           : e
                       ))
                     }}
-                    className={`block w-full px-4 py-2 rounded ${
+                    className={`block w-full px-6 py-3 rounded-lg text-lg ${
                       expense.approved 
                         ? 'bg-green-100 text-green-800' 
                         : 'border border-gray-300'
@@ -212,15 +177,15 @@ export default function Home() {
                             : e
                         ))
                       }}
-                      className="block w-full px-4 py-2 rounded border border-gray-300"
+                      className="block w-full px-6 py-3 rounded-lg border border-gray-300 text-lg"
                     >
                       Marquer remboursé
                     </button>
                   )}
                 </div>
               </div>
-              <div className="mt-2">
-                <span className={`px-2 py-1 text-sm rounded-full ${
+              <div className="mt-4">
+                <span className={`px-4 py-2 text-lg rounded-full ${
                   expense.status === 'Remboursé'
                     ? 'bg-green-100 text-green-800'
                     : expense.status === 'Approuvé'
@@ -232,8 +197,36 @@ export default function Home() {
               </div>
             </div>
           ))}
-        </div>
       </div>
     </div>
   )
+
+  const pageContent = (
+    <div className="max-w-6xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">
+          {userType === 'driver' ? 'Espace Chauffeur' : 'Espace Administrateur'}
+        </h1>
+        <button
+          onClick={() => setUserType('')}
+          className="text-gray-600 hover:text-gray-800 text-lg"
+        >
+          Déconnexion
+        </button>
+      </div>
+
+      <ExpenseForm />
+      <ExpensesList showAll={userType === 'admin'} />
+
+      <div className="mt-12 text-center">
+        <img
+          className="mx-auto max-h-24 w-auto"
+          src="/logo.png"
+          alt="Logo entreprise"
+        />
+      </div>
+    </div>
+  )
+
+  return pageContent
 }
